@@ -11,7 +11,7 @@ os.environ["LADSPA_PATH"] = "$LADSPA_PATH:/usr/lib/ladspa"
 window = Tk()
 
 window.title("Mic FX app")
-window.geometry('350x200')
+window.geometry('500x160')
 
 cur_arg = 'sox -t pulseaudio default -t pulseaudio null '
 
@@ -22,6 +22,11 @@ autotune_bool = False
 
 pitch_slider = Scale(window, from_=-800, to=800, orient=HORIZONTAL)
 reverb_slider = Scale(window, from_=0, to=100, orient=HORIZONTAL)
+
+def close():
+    os.system("killall sox")
+    os.system("pactl unload-module module-null-sink")
+    exit()
 
 def reverb():
     global reverb_bool
@@ -112,6 +117,7 @@ pitch_toggle = Button(window, text="Pitch", command=pitch)
 autotune_toggle = Button(window, text="Autotune", comman=autotune)
 add_all = Button(window, text="Add effects", command=add_effects)
 clean_stream = Button(window, text="Clear all effects", command=clean)
+exit_button = Button(window, text="Exit", command=close)
 
 effects_title = Label(window, text="Effects to add")
 reverb_title = Label(window, text="")
@@ -121,11 +127,11 @@ autotune_title = Label(window, text="")
 reverb_toggle.grid(column=0, row=0)
 pitch_toggle.grid(column=1, row=0)
 autotune_toggle.grid(column=2, row=0)
-
+clean_stream.grid(column=3, row=0)
+add_all.grid(column=3, row=1)
 pitch_slider.grid(column=1, row=1)
 reverb_slider.grid(column=0, row=1)
-clean_stream.grid(column=2, row=1)
-add_all.grid(column=3, row=1)
+exit_button.grid(column=3, row=3)
 effects_title.grid(column=0, row=3)
 reverb_title.grid(column=0, row=4)
 pitch_title.grid(column=0, row=5)
